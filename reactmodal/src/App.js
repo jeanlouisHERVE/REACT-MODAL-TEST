@@ -1,4 +1,6 @@
-import styled from 'styled-components'
+import { useState } from 'react';
+import styled from 'styled-components';
+import Modal from './components/Modal';
 
 const Container = styled.div`
   display: flex; 
@@ -19,9 +21,17 @@ const Button = styled.button`
 `
 
 function App() {
+
+const [showModal, setShowModal] = useState(false)
+const openModal = () => {
+  console.log('click')
+  setShowModal(!showModal)
+}
+
   return (
     <Container className="App">
-      <Button> I'm a modal </Button>
+      <Button onClick={openModal}> I'm a modal </Button>
+      <Modal showModal={showModal} setShowModal={setShowModal} />
     </Container>
   );
 }
