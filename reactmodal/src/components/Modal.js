@@ -1,7 +1,10 @@
+import { useRef, useEffect, useCallback } from 'react';
+import { useSpring, animated } from 'react-spring';
 import styled from 'styled-components';
 import { MdClose } from 'react-icons/md';
 
-export default function Modal({showModal, setShowModal}) {
+
+
 
     const Background = styled.div`
         width: 100%;
@@ -64,21 +67,41 @@ export default function Modal({showModal, setShowModal}) {
     z-index: 10;
     `;
 
+export const Modal = ({showModal, setShowModal}) => {
+    const modalRef = useRef()
+    const animation = useSpring({
+        config: {
+            duration: 250
+        },
+        opacity: showModal ? 1 : 0,
+        transform: showModal ? `translateY(0%)` : `translateY(-100%)`
+    })
+
+    const closeModal = e => {
+        if(modalRef.current === e.target) {
+            setShowModal(false)
+        }
+    }
+
     return (
         <>
            {showModal ? (
-               <Background>
-                   <ModalWrapper showModal={showModal}>
-                        <ModalImg src={require('./modal.jpg')} alt='camera'/>
-                        <ModalContent>
-                            <h1>Are you ready ?</h1>
-                            <p>Get exclusive access to our next launch</p>
-                            <button>Join Now</button>
-                        </ModalContent>
-                        <CloseModalButton aria-label='Close modal' onClick={() => setShowModal(prev => !prev)}/>
-                   </ModalWrapper>
+               <Background ref={modalRef} onClick={closeModal}>
+                   <animated.div style={animation}>
+                        <ModalWrapper showModal={showModal}>
+                                <ModalImg src={require('./modal.jpg')} alt='camera'/>
+                                <ModalContent>
+                                    <h1>Are you ready ?</h1>
+                                    <p>Get exclusive access to our next launch</p>
+                                    <button>Join Now</button>
+                                </ModalContent>
+                                <CloseModalButton aria-label='Close modal' onClick={() => setShowModal(prev => !prev)}/>
+                        </ModalWrapper>
+                   </animated.div>
                </Background>
            ) : null } 
         </>
     )
 }
+
+export default Modal;
